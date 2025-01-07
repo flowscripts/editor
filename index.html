@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowScripts - Editor</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        #banner {
+            height: 40px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+            font-size: 1.2em;
+            font-family: Arial, sans-serif;
+        }
+        #banner:hover {
+            height: 40px;
+            background-color: #333;
+            color: #00fffb;
+            text-align: center;
+            line-height: 40px;
+            font-size: 1.2em;
+            font-family: Arial, sans-serif;
+        }
+        #banner2 {
+            height: 5px;
+            background-color: #252525;
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+            font-size: 1.2em;
+            font-family: Arial, sans-serif;
+        }
+        #banner2:hover {
+            height: 5px;
+            background-color: #4e4e4e;
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+            font-size: 1.2em;
+            font-family: Arial, sans-serif;
+            cursor: e-resize;
+        }
+        #mainContent {
+            display: flex;
+            height: calc(100vh - 40px);
+        }
+        #inputArea, #outputArea {
+            width: 50%;
+            height: 100%;
+        }
+        #inputArea {
+            background: #bebebe;
+            padding: 10px;
+            box-sizing: border-box;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+        #inputArea:hover {
+            background: #959595;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #outputArea {
+            padding: 10px;
+            border-left: 3px solid #959595;
+        }
+        textarea {
+            width: 100%;
+            height: 100%;
+            font-family: monospace;
+            border: none;
+            resize: none;
+        }
+        .logo-1 {
+            background-color: #000000;border-radius: 8px
+        }
+        .logo-1:hover {
+            background-color: rgb(75, 75, 75);
+        }
+    </style>
+</head>
+<body>
+    <div id="banner">FlowScripts - Live Code Editor</div>
+    <div id="banner2"></div>
+    <div id="mainContent">
+        <a href="https://flowscripts.github.io">
+            <img class="logo-1" style="width:40px; height: 40px; cursor: all-scroll;" src="https://i.ibb.co/gTxMs58/backimagecool0.png" alt="FlowScripts">
+        </a>
+
+        <form></form>
+        <br>
+        <div id="inputArea">
+            <textarea autocorrect="off" spellcheck="false" id="htmlInput" placeholder="Enter HTML Code Here"></textarea>
+        </div>
+        <div id="outputArea">
+            <iframe id="htmlOutput" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const htmlInput = document.getElementById('htmlInput');
+        const htmlOutput = document.getElementById('htmlOutput').contentWindow.document;
+
+        htmlInput.addEventListener('input', () => {
+            htmlOutput.open();
+            htmlOutput.write(htmlInput.value);
+            htmlOutput.close();
+        });
+    </script>
+</body>
+</html>
