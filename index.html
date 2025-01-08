@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <link rel="shortcut icon" type="image/jpg" href="https://i.ibb.co/xMnzd6n/imagecool-9.png"/>
- 
+    <link rel="shortcut icon" type="image/jpg" href="https://i.ibb.co/xMnzd6n/imagecool-9.png"/>
     <title>FlowScripts - Editor</title>
     <style>
         body {
@@ -23,13 +22,8 @@
             font-family: Arial, sans-serif;
         }
         #banner:hover {
-            height: 40px;
             background-color: #333;
             color: #00fffb;
-            text-align: center;
-            line-height: 40px;
-            font-size: 1.2em;
-            font-family: Arial, sans-serif;
         }
         #banner2 {
             height: 5px;
@@ -41,13 +35,7 @@
             font-family: Arial, sans-serif;
         }
         #banner2:hover {
-            height: 5px;
             background-color: #4e4e4e;
-            color: #fff;
-            text-align: center;
-            line-height: 40px;
-            font-size: 1.2em;
-            font-family: Arial, sans-serif;
             cursor: e-resize;
         }
         #mainContent {
@@ -67,8 +55,6 @@
         }
         #inputArea:hover {
             background: #959595;
-            padding: 10px;
-            box-sizing: border-box;
         }
         #outputArea {
             padding: 10px;
@@ -80,11 +66,11 @@
             font-family: monospace;
             border: none;
             resize: none;
-            color: #333; /* Change text color */
-            font-size: 16px; /* Change font size */
+            color: #333;
+            font-size: 16px;
         }
         textarea::placeholder {
-            color: #000; /* Change placeholder color */
+            color: #000;
         }
         .logo-1 {
             background-color: #000000;
@@ -93,15 +79,75 @@
         .logo-1:hover {
             background-color: rgb(75, 75, 75);
         }
+
+        .logo-2 {
+            background-color: #000000;
+            border-radius: 8px;
+        }
+        .logo-2:hover {
+            background-color: rgb(255, 255, 255);
+            border-radius: 1px;
+        }
+
+        #buttonContainer {
+            display: flex;
+            justify-content: flex-start; /* Align buttons to the left */
+            padding: 10px;
+            background: #333;
+            flex-wrap: wrap; /* Allow buttons to wrap */
+        }
+        button {
+            border-radius: 2px;
+            border-color: #ffffff00;
+            background-color: white;
+            color: #000000;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px; /* Space between buttons */
+        }
+
+        button:hover {
+            border-color: #ffffff00;
+            background-color: rgb(232, 232, 232);
+            color: #0011ff;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Media query to adjust layout for small screens */
+        @media (max-width: 360px) {
+            #buttonContainer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            button {
+                margin-bottom: 10px; /* Space between buttons in vertical layout */
+            }
+        }
     </style>
 </head>
 <body>
     <div id="banner">FlowScripts - Live Code Editor</div>
     <div id="banner2"></div>
+    <div id="buttonContainer">
+        <button id="hideButton">X</button>
+        <button id="undoButton">Undo</button>
+        <button id="redoButton">Redo</button>
+        <button id="copyButton">Copy Code</button>
+    </div>
     <div id="mainContent">
-        <a href="https://flowscripts.github.io/editor-exit">
-            <img class="logo-1" style="width:40px; height: 40px; cursor: all-scroll;" src="https://i.ibb.co/gTxMs58/backimagecool0.png" alt="FlowScripts">
-        </a>
+        <div class="logo-container">
+            <a href="https://flowscripts.github.io/editor-exit">
+                <img class="logo-1" style="width:40px; height: 40px; cursor: all-scroll;" src="https://i.ibb.co/gTxMs58/backimagecool0.png" alt="FlowScripts">
+            </a>
+            <a href="https://flowscripts.github.io/account">
+                <img class="logo-2" style="width:40px; height: 40px; cursor: all-scroll;" src="https://i.ibb.co/wdG4rTC/am-a-19-year-old-multimedia-artist-student-from-manila-21.png" alt="FlowScripts">
+            </a>
+        </div>
 
         <form></form>
         <br>
@@ -116,12 +162,68 @@
     <script>
         const htmlInput = document.getElementById('htmlInput');
         const htmlOutput = document.getElementById('htmlOutput').contentWindow.document;
+        const hideButton = document.getElementById('hideButton');
+        const undoButton = document.getElementById('undoButton');
+        const redoButton = document.getElementById('redoButton');
+        const copyButton = document.getElementById('copyButton');
 
-        htmlInput.addEventListener('input', () => {
+        let history = [];
+        let index = -1;
+
+        const saveState = () => {
+            // Save current state
+            history = history.slice(0, index + 1);
+            history.push(htmlInput.value);
+            index++;
+        };
+
+        const undo = () => {
+            if (index > 0) {
+                index--;
+                htmlInput.value = history[index];
+                updateOutput();
+            }
+        };
+
+        const redo = () => {
+            if (index < history.length - 1) {
+                index++;
+                htmlInput.value = history[index];
+                updateOutput();
+            }
+        };
+
+        const updateOutput = () => {
             htmlOutput.open();
             htmlOutput.write(htmlInput.value);
             htmlOutput.close();
+        };
+
+        const copyToClipboard = () => {
+            htmlInput.select();
+            document.execCommand('copy');
+        };
+
+        const toggleButtons = () => {
+            const areButtonsVisible = undoButton.style.display !== 'none';
+            undoButton.style.display = areButtonsVisible ? 'none' : 'inline-block';
+            redoButton.style.display = areButtonsVisible ? 'none' : 'inline-block';
+            copyButton.style.display = areButtonsVisible ? 'none' : 'inline-block';
+            hideButton.textContent = areButtonsVisible ? 'Menu' : 'X';
+        };
+
+        htmlInput.addEventListener('input', () => {
+            saveState();
+            updateOutput();
         });
+
+        hideButton.addEventListener('click', toggleButtons);
+        undoButton.addEventListener('click', undo);
+        redoButton.addEventListener('click', redo);
+        copyButton.addEventListener('click', copyToClipboard);
+
+        // Initial save
+        saveState();
     </script>
 </body>
 </html>
